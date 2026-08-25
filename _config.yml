@@ -1,0 +1,6 @@
+title: RoboTune
+description: Browser-based VEX, FTC, and FRC system identification and PIDF autotuning
+theme: minima
+markdown: kramdown
+plugins:
+  - jekyll-feed
