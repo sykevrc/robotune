@@ -1,35 +1,20 @@
-# RoboTune
+# RoboTune v2 characterization package
 
-A browser-only characterization and PIDF autotuning prototype for VEX, FTC, and FRC.
+This package adds realistic demo data and robot-side characterization exporters
+for VEX/PROS, FTC SDK, and FRC/WPILib.
 
-## GitHub Pages deployment
+## Contents
 
-1. Create a new GitHub repository, for example `robotune`.
-2. Upload **all files in this folder** to the repository root.
-3. Open **Settings → Pages**.
-4. Under **Build and deployment**, choose **Deploy from a branch**.
-5. Select the `main` branch and `/ (root)`.
-6. Click **Save**.
-7. Wait for the GitHub Actions/Pages deployment to finish.
-8. Open the generated `https://USERNAME.github.io/robotune/` URL.
+- `robotune-web/` — browser tool + realistic synthetic demo JSON
+- `vex-pros/` — PROS C++ test program
+- `ftc-sdk/` — FTC SDK Java OpMode
+- `frc-wpilib/` — FRC WPILib Java test program
+- `docs/JSON_SCHEMA.md` — common JSON schema
+- `docs/SAFE_SEQUENCE.md` — staged characterization/safety procedure
 
-The application runs entirely in the browser. Uploaded JSON characterization files are processed locally and are not sent to a server.
+The common workflow is:
 
-## JSON format
+robot → staged characterization → robotune.json → GitHub Pages tool → system identification → feedforward → PIDF → validation.
 
-```json
-{
-  "metadata": {
-    "platform": "VEX",
-    "mechanism": "linear_slide"
-  },
-  "samples": [
-    {
-      "time": 0.000,
-      "voltage": 0.0,
-      "position": 0.0,
-      "velocity": 0.0
-    }
-  ]
-}
-```
+The robot programs are templates and must be configured for the team's actual motor,
+encoder, mechanism limits, and electrical hardware before running on a robot.

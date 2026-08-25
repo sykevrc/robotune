@@ -57,6 +57,16 @@ pre{white-space:pre-wrap;background:#06110a;border:1px solid var(--border);paddi
     <div id="status" class="muted" style="margin-top:10px">No data loaded.</div>
   </section>
   <section class="panel">
+<h2>Characterization sequence</h2>
+<p class="muted">The real robot programs use the same staged sequence: preflight → low-power static-friction test → low/medium/high ramps → step response → coast-down → validation. Each run stops on a timeout, software limit, current/velocity limit, driver abort, or E-stop.</p>
+<div class="cards">
+<div class="card"><div class="small">1</div><div>Preflight</div></div>
+<div class="card"><div class="small">2</div><div>kS test</div></div>
+<div class="card"><div class="small">3</div><div>Ramp tests</div></div>
+<div class="card"><div class="small">4</div><div>Validation</div></div>
+</div>
+</section>
+<section class="panel">
     <h2>3. Tune</h2>
     <p class="muted">The prototype estimates feedforward by least squares, then searches PID gains in simulation against the identified first-order plant.</p>
     <button id="tune" class="primary" style="width:100%">Characterize & Autotune</button>
@@ -141,15 +151,31 @@ async function loadFiles(files){
     setStatus(`${all.length} samples loaded from ${files.length} file(s).`);
   }catch(e){setStatus("Error: "+e.message)}
 }
-function demoData(){
-  const a=[];let v=0,p=0;
-  for(let i=0;i<1200;i++){
-    const t=i*.01, cmd=t<1?2+t*7:t<2?10:5;
-    const acc=(cmd-(.85*v))/0.22;
-    v+=acc*.01;p+=v*.01;
-    a.push({t,v:cmd,p,vel:v,acc});
+async function demoData(){
+  try{
+    const r=await fetch('demo_realistic.json');
+    if(!r.ok) throw new Error('demo_realistic.json not found');
+    const o=await r.json();
+    S.data=normalize(parseSamples(o)); S.meta=o.metadata||{};
+    render();
+    setStatus(`Realistic synthetic data loaded: ${S.data.length} samples. Known model is approximately kS=0.42, kV=1.65, kA=0.085.`);
+  }catch(e){
+    // Offline/file:// fallback: generate the same style of noisy characterization data.
+    const a=[]; let v=0,p=0;
+    const ks=.42,kv=1.65,ka=.085,dt=.01;
+    for(let i=0;i<1600;i++){
+      const t=i*dt;
+      let cmd=t<1.5?2+5*(t/1.5):t<3?7:t<4.5?4:t<6?9:t<7.5?6:0;
+      const s=v>.01?1:v<-.01?-1:(Math.abs(cmd)>.05?Math.sign(cmd):0);
+      const acc=(cmd-ks*s-kv*v)/ka;
+      v+=acc*dt+(Math.random()-.5)*.036;
+      if(Math.abs(cmd)<.05)v*=.985;
+      p+=v*dt;
+      a.push({t, v:cmd+(Math.random()-.5)*.05, p, vel:v});
+    }
+    S.data=normalize(a); S.meta={platform:'Generic',mechanism:'velocity'};
+    render(); setStatus(`Realistic synthetic data loaded: ${S.data.length} samples.`);
   }
-  S.data=a;S.meta={platform:"Generic",mechanism:"velocity"};render();setStatus("Demo characterization data loaded (synthetic).");
 }
 function regress(X,y){
   // Ridge-regularized least squares. This avoids unstable normal equations
