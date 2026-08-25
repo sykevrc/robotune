@@ -56,16 +56,7 @@ pre{white-space:pre-wrap;background:#06110a;border:1px solid var(--border);paddi
     <div class="row" style="margin-top:10px"><button id="demo">Load demo data</button><button id="clear" class="danger">Clear</button></div>
     <div id="status" class="muted" style="margin-top:10px">No data loaded.</div>
   </section>
-  <section class="panel">
-<h2>Characterization sequence</h2>
-<p class="muted">The real robot programs use the same staged sequence: preflight → low-power static-friction test → low/medium/high ramps → step response → coast-down → validation. Each run stops on a timeout, software limit, current/velocity limit, driver abort, or E-stop.</p>
-<div class="cards">
-<div class="card"><div class="small">1</div><div>Preflight</div></div>
-<div class="card"><div class="small">2</div><div>kS test</div></div>
-<div class="card"><div class="small">3</div><div>Ramp tests</div></div>
-<div class="card"><div class="small">4</div><div>Validation</div></div>
-</div>
-</section>
+
 <section class="panel">
     <h2>3. Tune</h2>
     <p class="muted">The prototype estimates feedforward by least squares, then searches PID gains in simulation against the identified first-order plant.</p>
