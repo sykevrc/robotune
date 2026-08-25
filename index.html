@@ -1,10 +1,9 @@
-
 <!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Robotune</title>
+<title>RoboTune — PIDF Characterization Lab</title>
 <style>
 :root{--bg:#07130d;--panel:#0d2116;--panel2:#12301e;--text:#e7f4eb;--muted:#91aa99;--accent:#49c878;--good:#63e6a0;--warn:#f1c75b;--bad:#ff7070;--border:#245236}
 *{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--text);font:14px/1.45 system-ui,-apple-system,Segoe UI,sans-serif}
@@ -14,7 +13,7 @@ h1,h2,h3{margin:0 0 8px} h1{font-size:23px} h2{font-size:17px} h3{font-size:14px
 .grid{display:grid;grid-template-columns:310px 1fr;gap:16px}.panel{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:16px}
 label{display:block;color:var(--muted);font-size:12px;margin:12px 0 5px} input,select,textarea{width:100%;background:#08170e;color:var(--text);border:1px solid var(--border);border-radius:7px;padding:9px}
 button{border:1px solid var(--border);background:#163a25;color:var(--text);padding:9px 13px;border-radius:7px;cursor:pointer;font-weight:600}
-button:hover{border-color:var(--accent)} button.primary{background:#176b3b;border-color:#2a9b57} button.good{background:#176b3b;border-color:#2a9b57}
+button:hover{border-color:var(--accent)} button.primary{background:#176b3b;border-color:#2a9b57} button.good{background:#176b45;border-color:#269a67}
 button.danger{background:#612c35}.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.drop{border:2px dashed var(--border);padding:22px;text-align:center;border-radius:10px}.drop.drag{border-color:var(--accent);background:#111d34}
 .cards{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.card{background:var(--panel2);border:1px solid var(--border);padding:12px;border-radius:9px}.value{font-size:21px;font-weight:700}.small{font-size:11px;color:var(--muted)}
 table{width:100%;border-collapse:collapse}th,td{padding:7px;border-bottom:1px solid var(--border);text-align:left;font-size:12px}
@@ -48,7 +47,7 @@ pre{white-space:pre-wrap;background:#06110a;border:1px solid var(--border);paddi
     <label>Voltage units</label><select id="voltUnit"><option value="volts">Volts</option><option value="pct">Percent (-100 to 100)</option></select>
     <label>Gravity model</label>
     <select id="gravity"><option value="none">None</option><option value="cos">kG · cos(θ)</option></select>
-    <label>Target velocity</label><input id="target" type="number" value="1000">
+    <label>Target velocity</label><input id="target" type="number" value="10">
     <label>Max output (V)</label><input id="maxOut" type="number" value="12">
   </section>
   <section class="panel">
@@ -153,18 +152,47 @@ function demoData(){
   S.data=a;S.meta={platform:"Generic",mechanism:"velocity"};render();setStatus("Demo characterization data loaded (synthetic).");
 }
 function regress(X,y){
-  const n=X[0].length,m=X.length,A=X.map((row,i)=>row.map((_,j)=>X.reduce((s,r)=>s+r[i]*r[j],0)));
-  const b=X.reduce((acc,row,i)=>acc.map((s,j)=>s+row[j]*y[i]),Array(m).fill(0));
-  for(let k=0;k<m;k++){let piv=k;for(let i=k+1;i<m;i++)if(Math.abs(A[i][k])>Math.abs(A[piv][k]))piv=i;[A[k],A[piv]]=[A[piv],A[k]];[b[k],b[piv]]=[b[piv],b[k]];for(let i=k+1;i<m;i++){let q=A[i][k]/(A[k][k]||1e-12);for(let j=k;j<m;j++)A[i][j]-=q*A[k][j];b[i]-=q*b[k]}}
-  const z=Array(m).fill(0);for(let i=m-1;i>=0;i--){let s=b[i];for(let j=i+1;j<m;j++)s-=A[i][j]*z[j];z[i]=s/(A[i][i]||1e-12)}return z;
+  // Ridge-regularized least squares. This avoids unstable normal equations
+  // when characterization columns are nearly collinear.
+  const m=X[0].length, A=Array.from({length:m},()=>Array(m).fill(0));
+  const b=Array(m).fill(0), lambda=1e-8;
+  for(let i=0;i<X.length;i++){
+    for(let j=0;j<m;j++){
+      b[j]+=X[i][j]*y[i];
+      for(let k=0;k<m;k++) A[j][k]+=X[i][j]*X[i][k];
+    }
+  }
+  for(let i=0;i<m;i++) A[i][i]+=lambda;
+  for(let k=0;k<m;k++){
+    let piv=k;
+    for(let i=k+1;i<m;i++) if(Math.abs(A[i][k])>Math.abs(A[piv][k])) piv=i;
+    if(Math.abs(A[piv][k])<1e-12) continue;
+    [A[k],A[piv]]=[A[piv],A[k]]; [b[k],b[piv]]=[b[piv],b[k]];
+    for(let i=k+1;i<m;i++){
+      const q=A[i][k]/A[k][k];
+      for(let j=k;j<m;j++) A[i][j]-=q*A[k][j];
+      b[i]-=q*b[k];
+    }
+  }
+  const z=Array(m).fill(0);
+  for(let i=m-1;i>=0;i--){
+    let s=b[i];
+    for(let j=i+1;j<m;j++) s-=A[i][j]*z[j];
+    z[i]=Math.abs(A[i][i])<1e-12?0:s/A[i][i];
+  }
+  return z.map(v=>Number.isFinite(v)?v:0);
 }
 function identify(){
   const d=S.data, gravity=$('gravity').value;
-  // V = kS*sign(v) + kV*v + kA*a (+ kG*cos(theta))
   const X=[],y=[];
-  d.forEach(r=>{if(Math.abs(r.vel)<1e-6&&Math.abs(r.acc)<1e-6)return;const c=gravity==="cos"?Math.cos(r.theta*Math.PI/180):0;X.push([Math.sign(r.vel),r.vel,r.acc,c]);y.push(r.v)});
-  let b=regress(X,y); if(gravity==="none") b=[b[0],b[1],b[2],0];
-  return {ks:b[0],kv:b[1],ka:b[2],kg:b[3]};
+  d.forEach(r=>{
+    if(Math.abs(r.vel)<1e-6&&Math.abs(r.acc)<1e-6)return;
+    const row=[Math.sign(r.vel),r.vel,r.acc];
+    if(gravity==="cos") row.push(Math.cos(r.theta*Math.PI/180));
+    X.push(row); y.push(r.v);
+  });
+  const b=regress(X,y);
+  return {ks:b[0]||0,kv:b[1]||0,ka:b[2]||0,kg:gravity==="cos"?(b[3]||0):0};
 }
 function plantSim(pid,ff,target,sec=4){
   const dt=.005,N=Math.floor(sec/dt);let vel=0,pos=0,integ=0,prev=target;const out=[];
@@ -182,18 +210,23 @@ function plantSim(pid,ff,target,sec=4){
   return {out,rms:Math.sqrt(rms/N)};
 }
 function autotune(ff){
-  const target=+$('target').value||1000;
+  const requested=+$('target').value;
+  const observedMax=Math.max(...S.data.map(r=>Math.abs(r.vel)));
+  const target=Number.isFinite(requested)&&requested>0?requested:Math.max(observedMax,1);
   let best={rms:Infinity,kp:0,ki:0,kd:0,sim:null};
-  const scales=[.05,.1,.2,.4,.8,1.6,3.2,6.4,12.8];
-  // coarse grid, deliberately conservative. Gains are in data units.
-  for(const kp of scales.map(x=>x*Math.max(Math.abs(ff.kv),.001))){
-    for(const kd of scales.slice(0,6).map(x=>x*Math.max(Math.abs(ff.ka),.001)*.5)){
-      for(const ki of [0,kp*.01,kp*.03,kp*.08]){
+  const kv=Math.max(Math.abs(ff.kv),1e-4), ka=Math.max(Math.abs(ff.ka),1e-4);
+  const scales=[.02,.05,.1,.2,.4,.8,1.6,3.2,6.4];
+  for(const kp of scales.map(x=>x*kv)){
+    for(const kd of scales.slice(0,7).map(x=>x*ka)){
+      for(const ki of [0,kp*.005,kp*.02,kp*.05]){
         const pid={kp,ki,kd},sim=plantSim(pid,ff,target);
-        if(sim.rms<best.rms)best={...pid,rms:sim.rms,sim};
+        if(Number.isFinite(sim.rms)&&sim.out.every(r=>Number.isFinite(r.vel))&&sim.rms<best.rms)
+          best={...pid,rms:sim.rms,sim};
       }
     }
   }
+  if(!best.sim) throw Error("No stable PID candidate was found. Check the data units and characterization quality.");
+  best.target=target;
   return best;
 }
 function tune(){
@@ -203,8 +236,8 @@ function tune(){
     $('ks').textContent=ff.ks.toFixed(5);$('kv').textContent=ff.kv.toFixed(5);$('ka').textContent=ff.ka.toFixed(5);$('kg').textContent=ff.kg.toFixed(5);
     $('kp').textContent=best.kp.toPrecision(6);$('ki').textContent=best.ki.toPrecision(6);$('kd').textContent=best.kd.toPrecision(6);$('rms').textContent=best.rms.toFixed(3);
     $('modelText').innerHTML=`Identified model: <b>V = ${ff.ks.toFixed(4)}·sgn(v) + ${ff.kv.toFixed(4)}·v + ${ff.ka.toFixed(4)}·a${ff.kg?' + '+ff.kg.toFixed(4)+'·cos(θ)':''}</b>`;
-    const last=best.sim.out.slice(-1)[0],max=Math.max(...best.sim.out.map(x=>x.vel));const over=Math.max(0,(max-(+$('target').value||1000))/(+$('target').value||1000)*100);
-    $('metrics').innerHTML=`Final velocity: <b>${last.vel.toFixed(1)}</b> · Peak overshoot: <b>${over.toFixed(1)}%</b> · Simulated duration: <b>4.0 s</b> · <span class="success">Model/tuning complete</span>`;
+    const usedTarget=best.target||+$('target').value||1; const last=best.sim.out.slice(-1)[0],max=Math.max(...best.sim.out.map(x=>x.vel));const over=Math.max(0,(max-usedTarget)/usedTarget*100);
+    $('metrics').innerHTML=`Target: <b>${usedTarget.toFixed(2)}</b> · Final velocity: <b>${last.vel.toFixed(2)}</b> · Peak overshoot: <b>${over.toFixed(1)}%</b> · Simulated duration: <b>4.0 s</b> · <span class="success">Model/tuning complete</span>`;
     drawSim();setStatus("Characterization and autotuning complete.");
     $('output').textContent=makeCode();
   }catch(e){setStatus("Tuning error: "+e.message)}
@@ -225,7 +258,7 @@ function lineChart(canvas,sets){
   c.fillStyle="#9aa7bd";c.fillText("time",w-40,h-8);
 }
 function drawData(){if(!S.data.length)return;lineChart($('chart'),[{data:S.data.map(r=>({x:r.t,y:r.vel}))},{data:S.data.map(r=>({x:r.t,y:r.v}))}])}
-function drawSim(){if(!S.sim)return;lineChart($('simChart'),[{data:S.sim.out.map(r=>({x:r.t,y:r.vel}))},{data:S.sim.out.map(r=>({x:r.t,y:+$('target').value}))}])}
+function drawSim(){if(!S.sim)return;const target=S.pid?.target??+$('target').value;lineChart($('simChart'),[{data:S.sim.out.map(r=>({x:r.t,y:r.vel}))},{data:S.sim.out.map(r=>({x:r.t,y:target}))}])}
 function makeConstants(){return {roboTuneVersion:"0.1",platform:$('platform').value,mechanism:$('mechanism').value,feedforward:S.ff,pid:S.pid?{kP:S.pid.kp,kI:S.pid.ki,kD:S.pid.kd}:null,units:{position:$('posUnit').value,velocity:$('velUnit').value,voltage:$('voltUnit').value}}}
 function makeCode(){
  if(!S.ff||!S.pid)return "Tune the system first.";
