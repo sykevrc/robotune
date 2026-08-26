@@ -1,20 +1,32 @@
-# RoboTune v2 characterization package
+# RoboTune v0.3 — mecanum-first PIDF characterization
 
-This package adds realistic demo data and robot-side characterization exporters
-for VEX/PROS, FTC SDK, and FRC/WPILib.
+Browser-based system identification and PIDF autotuning for competitive robotics, with **mecanum drive as the primary target**.
+
+## Workflow
+
+```
+robot → pure-axis characterization → robotune_mecanum.json → GitHub Pages tool
+      → kS/kV/kA per axis → PID search in simulation → export constants
+```
 
 ## Contents
 
-- `robotune-web/` — browser tool + realistic synthetic demo JSON
-- `vex-pros/` — PROS C++ test program
-- `ftc-sdk/` — FTC SDK Java OpMode
-- `frc-wpilib/` — FRC WPILib Java test program
-- `docs/JSON_SCHEMA.md` — common JSON schema
-- `docs/SAFE_SEQUENCE.md` — staged characterization/safety procedure
+| Path | Role |
+|------|------|
+| `index.html` | Client-side lab (forward / strafe / rotate axis tabs) |
+| `demo_realistic.json` | Fallback single-channel demo (tool also synthesizes mecanum) |
+| `docs/JSON_SCHEMA.md` | Single-DOF + multi-wheel schema |
+| `docs/SAFE_SEQUENCE.md` | Safety procedure, mecanum axis isolation |
+| `ftc-sdk/` | FTC OpMode — per-wheel JSON for mecanum |
+| `frc-wpilib/` | FRC template — same sequence |
+| `vex-pros/` | PROS C++ template |
 
-The common workflow is:
+## Mecanum characterization tips
 
-robot → staged characterization → robotune.json → GitHub Pages tool → system identification → feedforward → PIDF → validation.
+1. **Lifted wheels first** — static friction + free-spin velocity.  
+2. **On floor, pure axes only** — never mix forward + strafe in the same characterization run.  
+3. **Expect higher kS / kV for strafe** than forward (roller scrub).  
+4. Load the JSON, select each axis tab, and run **Characterize & Autotune**.  
+5. Export multi-axis constants for chassis feedforward + velocity PID.
 
-The robot programs are templates and must be configured for the team's actual motor,
-encoder, mechanism limits, and electrical hardware before running on a robot.
+The robot programs are templates: configure motors, encoders, limits, and E-stop before any on-robot run.

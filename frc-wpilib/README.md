@@ -1,14 +1,10 @@
-# RoboTune FRC WPILib characterization
+# RoboTune — FRC / WPILib mecanum characterization
 
-Add `RoboTuneCharacterization.java` to your robot project and map the motor
-in `RobotContainer`/constructor. The example uses a `PWMSparkMax`-style
-motor only to keep dependencies generic; replace it with your actual
-Spark/CTRE/REV motor controller and encoder.
+`RoboTuneCharacterization.java` is a template for pure-axis mecanum logging:
 
-The program writes `/home/lvuser/robotune.json`. For a USB drive, change
-the path to `/media/sda1/robotune.json` after verifying the mount.
+- Static friction → forward → strafe → rotate → coast-down  
+- Writes `/home/lvuser/robotune_mecanum.json` (per-wheel samples)  
+- **A** starts sequence, **B** aborts  
 
-WPILib also has its own SysId/DataLog ecosystem; this exporter is intended
-to produce the common RoboTune JSON schema so the same browser tool can
-analyze VEX/FTC/FRC data. WPILib's DataLogManager provides timestamped
-on-robot logging and is a good production upgrade path.
+Replace `PWMSparkMax` / `Encoder` channels with your actual controllers (CANSparkMax, TalonFX, etc.).  
+Keep first runs with wheels lifted and `MAX_OUTPUT` ≤ 0.45.

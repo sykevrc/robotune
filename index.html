@@ -3,33 +3,42 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>RoboTune — PIDF Characterization Lab</title>
+<title>RoboTune — Mecanum PIDF Characterization Lab</title>
 <style>
 :root{--bg:#07130d;--panel:#0d2116;--panel2:#12301e;--text:#e7f4eb;--muted:#91aa99;--accent:#49c878;--good:#63e6a0;--warn:#f1c75b;--bad:#ff7070;--border:#245236;--cyan:#6bd8e8}
 *{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--text);font:14px/1.45 system-ui,-apple-system,Segoe UI,sans-serif}
-header{padding:22px 28px;border-bottom:1px solid var(--border);background:#091b11;display:flex;justify-content:space-between;align-items:center;gap:20px}
+header{padding:22px 28px;border-bottom:1px solid var(--border);background:#091b11;display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap}
 h1,h2,h3{margin:0 0 8px} h1{font-size:23px} h2{font-size:17px} h3{font-size:14px}
 .subtitle,.muted{color:var(--muted)} main{max-width:1500px;margin:auto;padding:20px}
-.grid{display:grid;grid-template-columns:310px 1fr;gap:16px}.panel{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:16px}
+.grid{display:grid;grid-template-columns:320px 1fr;gap:16px}.panel{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:16px}
 label{display:block;color:var(--muted);font-size:12px;margin:12px 0 5px} input,select,textarea{width:100%;background:#08170e;color:var(--text);border:1px solid var(--border);border-radius:7px;padding:9px}
 button{border:1px solid var(--border);background:#163a25;color:var(--text);padding:9px 13px;border-radius:7px;cursor:pointer;font-weight:600}
 button:hover{border-color:var(--accent)} button.primary{background:#176b3b;border-color:#2a9b57} button.good{background:#176b45;border-color:#269a67}
 button.danger{background:#612c35}.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.drop{border:2px dashed var(--border);padding:22px;text-align:center;border-radius:10px}.drop.drag{border-color:var(--accent);background:#111d34}
 .link-button{display:inline-block;text-decoration:none}.source-links{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;font-size:12px}.source-links a{color:var(--cyan)}
-.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.card{background:var(--panel2);border:1px solid var(--border);padding:12px;border-radius:9px}.value{font-size:21px;font-weight:700}.small{font-size:11px;color:var(--muted)}
+.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.card{background:var(--panel2);border:1px solid var(--border);padding:12px;border-radius:9px}.value{font-size:18px;font-weight:700}.small{font-size:11px;color:var(--muted)}
 table{width:100%;border-collapse:collapse}th,td{padding:7px;border-bottom:1px solid var(--border);text-align:left;font-size:12px}
-canvas{width:100%;height:300px;background:#06110a;border:1px solid var(--border);border-radius:8px}
-pre{white-space:pre-wrap;background:#06110a;border:1px solid var(--border);padding:12px;border-radius:8px;overflow:auto}
+canvas{width:100%;height:280px;background:#06110a;border:1px solid var(--border);border-radius:8px}
+pre{white-space:pre-wrap;background:#06110a;border:1px solid var(--border);padding:12px;border-radius:8px;overflow:auto;font-size:12px}
 .badge{display:inline-block;padding:3px 7px;border-radius:20px;background:#25314a;color:#cbd6e9;font-size:11px}.success{color:var(--good)}.warning{color:var(--warn)}
-.twin-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.twin-grid label{margin-top:4px}.twin-grid input{padding:7px}.metric-line{display:flex;justify-content:space-between;border-bottom:1px solid var(--border);padding:6px 0}.metric-line:last-child{border-bottom:0}.callout{border-left:3px solid var(--warn);background:#282515;padding:10px;border-radius:4px}.callout.good{border-left-color:var(--good);background:#10281b}
+.twin-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.twin-grid label{margin-top:4px}.twin-grid input{padding:7px}
+.callout{border-left:3px solid var(--warn);background:#282515;padding:10px;border-radius:4px;margin-top:8px}.callout.good{border-left-color:var(--good);background:#10281b}
+.axis-tabs{display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap}
+.axis-tabs button{padding:6px 12px;font-size:12px}.axis-tabs button.active{background:#176b3b;border-color:#2a9b57}
+.mecanum-hint{font-size:12px;line-height:1.5;color:var(--muted);margin:8px 0}
 @media(max-width:950px){.grid{grid-template-columns:1fr}.cards{grid-template-columns:repeat(2,1fr)}}
 </style>
 </head>
 <body>
 <header>
-  <div><h1>RoboTune</h1><div class="subtitle">Browser-based system identification + PIDF autotuning prototype</div></div>
-  <div class="row"><a class="badge link-button" href="https://github.com/sykevrc/robotune" target="_blank" rel="noopener noreferrer">Characterization Programs ↗</a><div class="badge">v0.2 • client-side</div></div>
-  
+  <div>
+    <h1>RoboTune</h1>
+    <div class="subtitle">Mecanum-first system identification + PIDF autotuning</div>
+  </div>
+  <div class="row">
+    <a class="badge link-button" href="https://github.com/sykevrc/robotune" target="_blank" rel="noopener noreferrer">Characterization Programs ↗</a>
+    <div class="badge">v0.3 • client-side • mecanum</div>
+  </div>
 </header>
 <main>
 <div class="grid">
@@ -37,66 +46,99 @@ pre{white-space:pre-wrap;background:#06110a;border:1px solid var(--border);paddi
   <section class="panel">
     <h2>1. Mechanism</h2>
     <label>Platform</label>
-    <select id="platform"><option>VEX / PROS</option><option>FTC</option><option>FRC</option><option>Generic</option></select>
+    <select id="platform">
+      <option>FTC</option>
+      <option>FRC</option>
+      <option>VEX / PROS</option>
+      <option>Generic</option>
+    </select>
     <label>Mechanism</label>
     <select id="mechanism">
+      <option value="mecanum" selected>Mecanum drive</option>
+      <option value="drive">Tank / differential drive</option>
       <option value="velocity">Velocity / Flywheel</option>
       <option value="slide">Linear Slide / Elevator</option>
       <option value="pivot">Pivot Arm</option>
-      <option value="drive">Drivebase</option>
     </select>
+    <p class="mecanum-hint" id="mechHint">
+      Characterize <b>forward</b>, <b>strafe</b>, and <b>rotate</b> as separate pure-axis runs.
+      Prefer lifted-wheel static tests first, then on-floor axis isolation.
+    </p>
     <label>Position units</label><input id="posUnit" value="ticks">
     <label>Velocity units</label><input id="velUnit" value="ticks/s">
-    <label>Voltage units</label><select id="voltUnit"><option value="volts">Volts</option><option value="pct">Percent (-100 to 100)</option></select>
+    <label>Voltage units</label>
+    <select id="voltUnit"><option value="volts">Volts</option><option value="pct">Percent (-100 to 100)</option></select>
     <label>Gravity model</label>
     <select id="gravity"><option value="none">None</option><option value="cos">kG · cos(θ)</option></select>
-    <label>Target velocity</label><input id="target" type="number" value="10">
+    <label>Target velocity (active axis)</label><input id="target" type="number" value="800">
     <label>Max output (V)</label><input id="maxOut" type="number" value="12">
   </section>
+
   <section class="panel">
     <h2>2. Load data</h2>
-    <div id="drop" class="drop">Drop JSON files here<br><span class="muted">or</span><br><br><input id="file" type="file" accept=".json,application/json" multiple></div>
-    <div class="row" style="margin-top:10px"><button id="demo">Load demo data</button><button id="clear" class="danger">Clear</button></div>
+    <div id="drop" class="drop">Drop JSON files here<br><span class="muted">or</span><br><br>
+      <input id="file" type="file" accept=".json,application/json" multiple>
+    </div>
+    <div class="row" style="margin-top:10px">
+      <button id="demo">Load mecanum demo</button>
+      <button id="clear" class="danger">Clear</button>
+    </div>
     <div id="status" class="muted" style="margin-top:10px">No data loaded.</div>
-    <div class="source-links"><span class="muted">JSON capture code:</span><a href="https://github.com/sykevrc/robotune/tree/main/frc-wpilib" target="_blank" rel="noopener noreferrer">FRC</a><a href="https://github.com/sykevrc/robotune/tree/main/ftc-sdk" target="_blank" rel="noopener noreferrer">FTC</a><a href="https://github.com/sykevrc/robotune/tree/main/vex-pros" target="_blank" rel="noopener noreferrer">VEX / PROS</a></div>
+    <div class="source-links">
+      <span class="muted">JSON capture code:</span>
+      <a href="https://github.com/sykevrc/robotune/tree/main/ftc-sdk" target="_blank" rel="noopener noreferrer">FTC</a>
+      <a href="https://github.com/sykevrc/robotune/tree/main/frc-wpilib" target="_blank" rel="noopener noreferrer">FRC</a>
+      <a href="https://github.com/sykevrc/robotune/tree/main/vex-pros" target="_blank" rel="noopener noreferrer">VEX / PROS</a>
+    </div>
   </section>
 
-<section class="panel">
-    <h2>3. Tune</h2>
-    <p class="muted">The prototype estimates feedforward by least squares, then searches PID gains in simulation against the identified first-order plant.</p>
-    <button id="tune" class="primary" style="width:100%">Characterize & Autotune</button>
+  <section class="panel">
+    <h2>3. Axis &amp; Tune</h2>
+    <div class="axis-tabs" id="axisTabs">
+      <button type="button" data-axis="forward" class="active">Forward</button>
+      <button type="button" data-axis="strafe">Strafe</button>
+      <button type="button" data-axis="rotate">Rotate</button>
+      <button type="button" data-axis="wheel">Shared wheel</button>
+    </div>
+    <p class="muted" style="font-size:12px;margin-bottom:10px">Select which axis model to fit from the loaded samples (filtered by phase when available).</p>
+    <button id="tune" class="primary" style="width:100%">Characterize &amp; Autotune</button>
   </section>
+
   <section class="panel">
     <h2>4. Digital twin</h2>
-    <p class="muted">A hidden plant generates telemetry and receives the tuned controller.</p>
+    <p class="muted">Hidden plant for validation. Twin parameters are not used during identification.</p>
     <div class="twin-grid">
-      <div><label>Ground-truth kS</label><input id="twinKs" type="number" value="0.48" step="0.01"></div>
-      <div><label>Ground-truth kV</label><input id="twinKv" type="number" value="0.71" step="0.01"></div>
-      <div><label>Ground-truth kA</label><input id="twinKa" type="number" value="0.13" step="0.01"></div>
+      <div><label>Ground-truth kS</label><input id="twinKs" type="number" value="0.55" step="0.01"></div>
+      <div><label>Ground-truth kV</label><input id="twinKv" type="number" value="0.012" step="0.001"></div>
+      <div><label>Ground-truth kA</label><input id="twinKa" type="number" value="0.0015" step="0.0001"></div>
       <div><label>Ground-truth kG</label><input id="twinKg" type="number" value="0" step="0.01"></div>
-      <div><label>Noise (%)</label><input id="twinNoise" type="number" value="2" min="0" max="20" step="0.5"></div>
+      <div><label>Noise (%)</label><input id="twinNoise" type="number" value="3" min="0" max="20" step="0.5"></div>
       <div><label>Battery (V)</label><input id="twinBattery" type="number" value="12" min="1" max="24" step="0.1"></div>
     </div>
-    <div class="row" style="margin-top:12px"><button id="runTwin" class="good">Run hidden twin</button><button id="monteCarlo">Validate 100 runs</button></div>
-    <div id="twinStatus" class="muted" style="margin-top:10px">Twin is ready. Its parameters are hidden from identification.</div>
+    <div class="row" style="margin-top:12px">
+      <button id="runTwin" class="good">Run hidden twin</button>
+      <button id="monteCarlo">Validate 100 runs</button>
+    </div>
+    <div id="twinStatus" class="muted" style="margin-top:10px">Twin is ready.</div>
   </section>
 </aside>
 
 <section>
   <section class="panel">
-    <h2>System identification</h2>
+    <h2>System identification <span class="badge" id="axisBadge">forward</span></h2>
     <div class="cards">
       <div class="card"><div class="small">kS</div><div class="value" id="ks">—</div></div>
       <div class="card"><div class="small">kV</div><div class="value" id="kv">—</div></div>
       <div class="card"><div class="small">kA</div><div class="value" id="ka">—</div></div>
       <div class="card"><div class="small">kG</div><div class="value" id="kg">—</div></div>
     </div>
-    <p id="modelText" class="muted">Load characterization data to begin.</p>
+    <p id="modelText" class="muted">Load characterization data to begin. For mecanum, run pure-axis sequences (forward / strafe / rotate).</p>
+    <div id="axisSummary" class="callout good" style="display:none"></div>
   </section>
 
   <section class="panel">
     <h2>Live simulation</h2>
-    <div id="reachability" class="callout">Set a target and run the twin to check the reachable operating range.</div>
+    <div id="reachability" class="callout">Set a target and run the twin (or tune real data) to check the reachable operating range.</div>
     <div class="cards" style="margin-top:10px">
       <div class="card"><div class="small">Estimated max velocity</div><div class="value" id="maxVelocity">—</div></div>
       <div class="card"><div class="small">Twin RMS error</div><div class="value" id="twinRms">—</div></div>
@@ -129,257 +171,808 @@ pre{white-space:pre-wrap;background:#06110a;border:1px solid var(--border);paddi
 
   <section class="panel">
     <h2>Export</h2>
-    <div class="row"><button id="jsonOut">Export constants JSON</button><button id="codeOut">Export platform code</button></div>
+    <div class="row">
+      <button id="jsonOut">Export constants JSON</button>
+      <button id="codeOut">Export platform code</button>
+    </div>
     <pre id="output">Tune the system to generate exportable constants.</pre>
   </section>
 
   <section class="panel">
     <h2>Data preview</h2>
-    <div style="overflow:auto"><table><thead><tr><th>t</th><th>V</th><th>position</th><th>velocity</th><th>accel</th></tr></thead><tbody id="tbody"></tbody></table></div>
+    <div style="overflow:auto">
+      <table>
+        <thead><tr><th>t</th><th>V</th><th>position</th><th>velocity</th><th>accel</th><th>phase</th></tr></thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
   </section>
 </section>
 </div>
 </main>
 <script>
-const S={data:[],ff:null,pid:null,sim:null,twin:null,meta:{}};
-const $=id=>document.getElementById(id);
-function esc(s){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
-function setStatus(x){$('status').textContent=x}
-function parseSamples(obj){
-  if(Array.isArray(obj)) return obj;
-  if(Array.isArray(obj.samples)) return obj.samples;
-  if(Array.isArray(obj.data)) return obj.data;
-  throw Error("JSON must contain a samples or data array.");
+const S = {
+  data: [],
+  rawSamples: [],
+  ff: null,
+  pid: null,
+  sim: null,
+  twin: null,
+  meta: {},
+  axis: 'forward',
+  axisModels: {} // forward / strafe / rotate / wheel
+};
+const $ = id => document.getElementById(id);
+
+function setStatus(x) { $('status').textContent = x; }
+
+function parseSamples(obj) {
+  if (Array.isArray(obj)) return obj;
+  if (Array.isArray(obj.samples)) return obj.samples;
+  if (Array.isArray(obj.data)) return obj.data;
+  throw Error('JSON must contain a samples or data array.');
 }
-function normalize(samples){
-  let a=samples.map((r,i)=>({t:+(r.time??r.t??i),v:+(r.voltage??r.v??r.output??0),p:+(r.position??r.pos??0),vel:+(r.velocity??r.vel??0),theta:+(r.theta??r.angle??r.position??0)}))
-  .filter(r=>[r.t,r.v,r.p,r.vel].every(Number.isFinite)).sort((x,y)=>x.t-y.t);
-  if(a.length<4) throw Error("Need at least 4 valid samples.");
-  const t0=a[0].t; a.forEach(r=>r.t-=t0);
-  for(let i=0;i<a.length;i++){
-    if(i===0) racc(a[i],a[1],a[0]);
-    else if(i===a.length-1) racc(a[i],a[i],a[i-1]);
-    else racc(a[i],a[i+1],a[i-1]);
+
+/** Expand multi-wheel samples into channel rows the regressor understands. */
+function expandSample(r, i) {
+  const t = +(r.time ?? r.t ?? i);
+  const phase = (r.phase || '').toLowerCase();
+  const rows = [];
+  const wheels = ['fl', 'fr', 'bl', 'br'];
+  const hasWheels = wheels.some(w => r[w] && typeof r[w] === 'object');
+
+  if (hasWheels) {
+    for (const w of wheels) {
+      const ch = r[w];
+      if (!ch) continue;
+      rows.push({
+        t,
+        v: +(ch.voltage ?? ch.v ?? ch.output ?? 0),
+        p: +(ch.position ?? ch.pos ?? 0),
+        vel: +(ch.velocity ?? ch.vel ?? 0),
+        theta: 0,
+        phase,
+        channel: w,
+        axisHint: phaseAxis(phase)
+      });
+    }
+  }
+
+  // Chassis channels
+  if (r.vx != null || r.vy != null || r.omega != null) {
+    if (r.vx != null) {
+      rows.push({
+        t, v: +(r.voltage_forward ?? r.v_forward ?? averageWheelVoltage(r, 'forward')),
+        p: 0, vel: +r.vx, theta: 0, phase, channel: 'vx', axisHint: 'forward'
+      });
+    }
+    if (r.vy != null) {
+      rows.push({
+        t, v: +(r.voltage_strafe ?? r.v_strafe ?? averageWheelVoltage(r, 'strafe')),
+        p: 0, vel: +r.vy, theta: 0, phase, channel: 'vy', axisHint: 'strafe'
+      });
+    }
+    if (r.omega != null) {
+      rows.push({
+        t, v: +(r.voltage_rotate ?? r.v_rotate ?? averageWheelVoltage(r, 'rotate')),
+        p: 0, vel: +r.omega, theta: 0, phase, channel: 'omega', axisHint: 'rotate'
+      });
+    }
+  }
+
+  // Legacy single channel
+  if (!rows.length) {
+    rows.push({
+      t,
+      v: +(r.voltage ?? r.v ?? r.output ?? 0),
+      p: +(r.position ?? r.pos ?? 0),
+      vel: +(r.velocity ?? r.vel ?? 0),
+      theta: +(r.theta ?? r.angle ?? r.position ?? 0),
+      phase,
+      channel: 'single',
+      axisHint: phaseAxis(phase) || 'wheel'
+    });
+  }
+  return rows;
+}
+
+function averageWheelVoltage(r, axis) {
+  const signs = {
+    forward: { fl: 1, fr: 1, bl: 1, br: 1 },
+    strafe:  { fl: 1, fr: -1, bl: -1, br: 1 },
+    rotate:  { fl: 1, fr: -1, bl: 1, br: -1 }
+  }[axis] || { fl: 1, fr: 1, bl: 1, br: 1 };
+  let sum = 0, n = 0;
+  for (const w of Object.keys(signs)) {
+    if (r[w] && r[w].voltage != null) {
+      sum += Math.abs(+r[w].voltage);
+      n++;
+    }
+  }
+  return n ? sum / n : +(r.voltage ?? 0);
+}
+
+function phaseAxis(phase) {
+  if (!phase) return null;
+  if (phase.includes('strafe') || phase.includes('side')) return 'strafe';
+  if (phase.includes('rotat') || phase.includes('spin') || phase.includes('turn')) return 'rotate';
+  if (phase.includes('forward') || phase.includes('drive') || phase.includes('long')) return 'forward';
+  if (phase.includes('static') || phase.includes('coast') || phase.includes('step') || phase.includes('ramp')) return null;
+  return null;
+}
+
+function normalize(rawSamples) {
+  const expanded = [];
+  rawSamples.forEach((r, i) => expanded.push(...expandSample(r, i)));
+  let a = expanded
+    .filter(r => [r.t, r.v, r.p, r.vel].every(Number.isFinite))
+    .sort((x, y) => x.t - y.t);
+  if (a.length < 4) throw Error('Need at least 4 valid samples.');
+  const t0 = a[0].t;
+  a.forEach(r => { r.t -= t0; });
+  // acceleration per channel group
+  const byCh = {};
+  a.forEach((r, i) => {
+    const key = r.channel + '|' + (r.axisHint || '');
+    if (!byCh[key]) byCh[key] = [];
+    byCh[key].push({ r, i });
+  });
+  for (const list of Object.values(byCh)) {
+    for (let j = 0; j < list.length; j++) {
+      const cur = list[j].r;
+      const prev = list[Math.max(0, j - 1)].r;
+      const next = list[Math.min(list.length - 1, j + 1)].r;
+      const dt = next.t - prev.t;
+      cur.acc = dt ? (next.vel - prev.vel) / dt : 0;
+    }
   }
   return a;
 }
-function racc(r,next,prev){const dt=next.t-prev.t; r.acc=dt?((next.vel-prev.vel)/dt):0}
-async function loadFiles(files){
-  try{
-    let all=[], meta={};
-    for(const f of files){const o=JSON.parse(await f.text()); all.push(...normalize(parseSamples(o))); meta={...meta,...(o.metadata||{})}}
-    all.sort((a,b)=>a.t-b.t); S.data=all;S.meta=meta;S.twin=null; render();
-    setStatus(`${all.length} samples loaded from ${files.length} file(s).`);
-  }catch(e){setStatus("Error: "+e.message)}
+
+function filterByAxis(data, axis) {
+  if (axis === 'wheel') return data;
+  const phaseMatch = data.filter(r => r.axisHint === axis || (r.phase && phaseAxis(r.phase) === axis));
+  if (phaseMatch.length >= 8) return phaseMatch;
+  // fallback: if chassis channel present
+  const chMatch = data.filter(r =>
+    (axis === 'forward' && r.channel === 'vx') ||
+    (axis === 'strafe' && r.channel === 'vy') ||
+    (axis === 'rotate' && r.channel === 'omega')
+  );
+  if (chMatch.length >= 8) return chMatch;
+  return data; // last resort: whole set
 }
-async function demoData(){
-  try{
-    const r=await fetch('demo_realistic.json');
-    if(!r.ok) throw new Error('demo_realistic.json not found');
-    const o=await r.json();
-    S.data=normalize(parseSamples(o)); S.meta=o.metadata||{};S.twin=null;
+
+async function loadFiles(files) {
+  try {
+    let all = [], meta = {}, raw = [];
+    for (const f of files) {
+      const o = JSON.parse(await f.text());
+      const samples = parseSamples(o);
+      raw.push(...samples);
+      all.push(...normalize(samples));
+      meta = { ...meta, ...(o.metadata || {}) };
+    }
+    all.sort((a, b) => a.t - b.t);
+    S.data = all;
+    S.rawSamples = raw;
+    S.meta = meta;
+    S.twin = null;
+    S.axisModels = {};
+    if (meta.mechanism) {
+      const m = String(meta.mechanism).toLowerCase();
+      if (['mecanum', 'drive', 'velocity', 'slide', 'pivot'].includes(m)) {
+        $('mechanism').value = m === 'drive' ? 'drive' : m;
+      }
+    }
     render();
-    setStatus(`Realistic synthetic data loaded: ${S.data.length} samples. Known model is approximately kS=0.42, kV=1.65, kA=0.085.`);
-  }catch(e){
-    // Offline/file:// fallback: generate the same style of noisy characterization data.
-    const a=[]; let v=0,p=0;
-    const ks=.42,kv=1.65,ka=.085,dt=.01;
-    for(let i=0;i<1600;i++){
-      const t=i*dt;
-      let cmd=t<1.5?2+5*(t/1.5):t<3?7:t<4.5?4:t<6?9:t<7.5?6:0;
-      const s=v>.01?1:v<-.01?-1:(Math.abs(cmd)>.05?Math.sign(cmd):0);
-      const acc=(cmd-ks*s-kv*v)/ka;
-      v+=acc*dt+(Math.random()-.5)*.036;
-      if(Math.abs(cmd)<.05)v*=.985;
-      p+=v*dt;
-      a.push({t, v:cmd+(Math.random()-.5)*.05, p, vel:v});
-    }
-    S.data=normalize(a); S.meta={platform:'Generic',mechanism:'velocity'};
-    S.twin=null;render(); setStatus(`Realistic synthetic data loaded: ${S.data.length} samples.`);
+    setStatus(`${all.length} expanded samples from ${files.length} file(s). Mechanism: ${meta.mechanism || 'unknown'}.`);
+  } catch (e) {
+    setStatus('Error: ' + e.message);
   }
 }
-function regress(X,y){
-  // Ridge-regularized least squares. This avoids unstable normal equations
-  // when characterization columns are nearly collinear.
-  const m=X[0].length, A=Array.from({length:m},()=>Array(m).fill(0));
-  const b=Array(m).fill(0), lambda=1e-8;
-  for(let i=0;i<X.length;i++){
-    for(let j=0;j<m;j++){
-      b[j]+=X[i][j]*y[i];
-      for(let k=0;k<m;k++) A[j][k]+=X[i][j]*X[i][k];
+
+/** Synthetic mecanum-style demo: three pure-axis runs concatenated. */
+function makeMecanumDemo() {
+  const a = [];
+  const dt = 0.01;
+  // Approximate ground truth (ticks/s units)
+  const models = {
+    forward: { ks: 0.55, kv: 0.012, ka: 0.0015 },
+    strafe:  { ks: 0.85, kv: 0.018, ka: 0.0020 },
+    rotate:  { ks: 0.70, kv: 0.015, ka: 0.0018 }
+  };
+  let t = 0;
+  function runAxis(name, model, duration, cmdFn) {
+    let vel = 0, pos = 0;
+    for (let i = 0; i < duration / dt; i++) {
+      const local = i * dt;
+      const cmd = cmdFn(local);
+      const s = vel > 0.5 ? 1 : vel < -0.5 ? -1 : (Math.abs(cmd) > 0.05 ? Math.sign(cmd) : 0);
+      const acc = (cmd - model.ks * s - model.kv * vel) / model.ka;
+      vel += acc * dt + (Math.random() - 0.5) * 8;
+      if (Math.abs(cmd) < 0.05) vel *= 0.97;
+      pos += vel * dt;
+      const noiseV = cmd + (Math.random() - 0.5) * 0.08;
+      // emit 4 wheels with small mismatch
+      for (const w of ['fl', 'fr', 'bl', 'br']) {
+        a.push({
+          t,
+          v: noiseV + (Math.random() - 0.5) * 0.05,
+          p: pos + (Math.random() - 0.5) * 2,
+          vel: vel + (Math.random() - 0.5) * 12,
+          phase: name,
+          channel: w,
+          axisHint: name.includes('strafe') ? 'strafe' : name.includes('rotat') ? 'rotate' : 'forward',
+          theta: 0
+        });
+      }
+      t += dt;
     }
   }
-  for(let i=0;i<m;i++) A[i][i]+=lambda;
-  for(let k=0;k<m;k++){
-    let piv=k;
-    for(let i=k+1;i<m;i++) if(Math.abs(A[i][k])>Math.abs(A[piv][k])) piv=i;
-    if(Math.abs(A[piv][k])<1e-12) continue;
-    [A[k],A[piv]]=[A[piv],A[k]]; [b[k],b[piv]]=[b[piv],b[k]];
-    for(let i=k+1;i<m;i++){
-      const q=A[i][k]/A[k][k];
-      for(let j=k;j<m;j++) A[i][j]-=q*A[k][j];
-      b[i]-=q*b[k];
-    }
-  }
-  const z=Array(m).fill(0);
-  for(let i=m-1;i>=0;i--){
-    let s=b[i];
-    for(let j=i+1;j<m;j++) s-=A[i][j]*z[j];
-    z[i]=Math.abs(A[i][i])<1e-12?0:s/A[i][i];
-  }
-  return z.map(v=>Number.isFinite(v)?v:0);
-}
-function identify(){
-  const d=S.data, gravity=$('gravity').value;
-  const X=[],y=[];
-  d.forEach(r=>{
-    if(Math.abs(r.vel)<1e-6&&Math.abs(r.acc)<1e-6)return;
-    const row=[Math.sign(r.vel),r.vel,r.acc];
-    if(gravity==="cos") row.push(Math.cos(r.theta*Math.PI/180));
-    X.push(row); y.push(r.v);
+  // forward: ramp + steps
+  runAxis('forward_ramp', models.forward, 3, loc => loc < 1.5 ? 2 + 5 * (loc / 1.5) : 7);
+  runAxis('forward_step', models.forward, 2, loc => loc < 1 ? 5 : 0);
+  runAxis('strafe_ramp', models.strafe, 3, loc => loc < 1.5 ? 2 + 4 * (loc / 1.5) : 6);
+  runAxis('strafe_step', models.strafe, 2, loc => loc < 1 ? 4.5 : 0);
+  runAxis('rotate_ramp', models.rotate, 3, loc => loc < 1.5 ? 2 + 4.5 * (loc / 1.5) : 6.5);
+  runAxis('rotate_step', models.rotate, 2, loc => loc < 1 ? 5 : 0);
+  // normalize acc
+  const byCh = {};
+  a.forEach(r => {
+    const key = r.channel + '|' + r.axisHint;
+    if (!byCh[key]) byCh[key] = [];
+    byCh[key].push(r);
   });
-  const b=regress(X,y);
-  return {ks:b[0]||0,kv:b[1]||0,ka:b[2]||0,kg:gravity==="cos"?(b[3]||0):0};
-}
-function twinValues(){
-  return {ks:+$('twinKs').value,kv:+$('twinKv').value,ka:Math.max(+$('twinKa').value,.001),kg:+$('twinKg').value,noise:Math.max(0,+$('twinNoise').value)/100,battery:Math.max(+$('twinBattery').value,.1)};
-}
-function twinMaximum(t){return Math.max(0,(t.battery-Math.abs(t.ks)-Math.abs(t.kg))/Math.max(Math.abs(t.kv),.001))}
-function makeTwinData(t,seedNoise=t.noise){
-  const a=[],dt=.01; let vel=0,pos=0;
-  for(let i=0;i<1200;i++){
-    const time=i*dt, phase=time%6;
-    const cmd=phase<1.5?2+6*phase/1.5:phase<3?8:phase<4.5?-2-6*(phase-3)/1.5:-8;
-    const sign=Math.sign(vel||cmd), friction=t.ks*sign+t.kv*vel+t.kg;
-    const acc=(cmd-friction)/t.ka;
-    vel+=acc*dt; pos+=vel*dt;
-    const noise=1+(Math.random()-.5)*2*seedNoise;
-      a.push({t:time,v:cmd,p:pos,vel:vel*noise,theta:0});
+  for (const list of Object.values(byCh)) {
+    for (let j = 0; j < list.length; j++) {
+      const cur = list[j], prev = list[Math.max(0, j - 1)], next = list[Math.min(list.length - 1, j + 1)];
+      const dtt = next.t - prev.t;
+      cur.acc = dtt ? (next.vel - prev.vel) / dtt : 0;
+    }
   }
-  return normalize(a);
+  return a;
 }
-function closedLoopSim(pid,ff,target,twin,sec=4){
-  const dt=.005,N=Math.floor(sec/dt);let vel=0,pos=0,integ=0,prev=target;const out=[];let sum=0;
-  for(let i=0;i<N;i++){
-    const time=i*dt,error=target-vel;integ+=error*dt;const derivative=(error-prev)/dt;
-    const sign=Math.sign(vel||error), identifiedFF=ff.ks*sign+ff.kv*vel+ff.kg;
-    let voltage=pid.kp*error+pid.ki*integ+pid.kd*derivative+identifiedFF;
-    voltage=Math.max(-twin.battery,Math.min(twin.battery,voltage));
-    const trueFF=twin.ks*sign+twin.kv*vel+twin.kg;
-    vel+=((voltage-trueFF)/twin.ka)*dt;pos+=vel*dt;prev=error;sum+=error*error;
-    out.push({t:time,vel,u:voltage,pos});
+
+async function demoData() {
+  try {
+    const r = await fetch('demo_realistic.json');
+    if (r.ok) {
+      const o = await r.json();
+      // Prefer built-in mecanum synthetic if demo is single-channel velocity
+      if (o.metadata && o.metadata.mechanism === 'velocity' && !o.samples[0]?.fl) {
+        S.data = makeMecanumDemo();
+        S.meta = {
+          platform: 'Generic',
+          mechanism: 'mecanum',
+          ground_truth_note: 'Synthetic mecanum: forward≈kS0.55/kV0.012, strafe≈kS0.85/kV0.018, rotate≈kS0.70/kV0.015'
+        };
+        S.twin = null;
+        S.axisModels = {};
+        $('mechanism').value = 'mecanum';
+        render();
+        setStatus(`Mecanum synthetic data: ${S.data.length} samples (forward / strafe / rotate).`);
+        return;
+      }
+      S.data = normalize(parseSamples(o));
+      S.meta = o.metadata || {};
+      S.twin = null;
+      S.axisModels = {};
+      render();
+      setStatus(`Demo loaded: ${S.data.length} samples.`);
+      return;
+    }
+  } catch (_) { /* fall through */ }
+  S.data = makeMecanumDemo();
+  S.meta = { platform: 'Generic', mechanism: 'mecanum' };
+  S.twin = null;
+  S.axisModels = {};
+  $('mechanism').value = 'mecanum';
+  render();
+  setStatus(`Mecanum synthetic data: ${S.data.length} samples.`);
+}
+
+function regress(X, y) {
+  const m = X[0].length, A = Array.from({ length: m }, () => Array(m).fill(0));
+  const b = Array(m).fill(0), lambda = 1e-8;
+  for (let i = 0; i < X.length; i++) {
+    for (let j = 0; j < m; j++) {
+      b[j] += X[i][j] * y[i];
+      for (let k = 0; k < m; k++) A[j][k] += X[i][j] * X[i][k];
+    }
   }
-  return {out,rms:Math.sqrt(sum/N)};
-}
-function plantSim(pid,ff,target,sec=4){
-  if(S.twin)return closedLoopSim(pid,ff,target,S.twin,sec);
-  const dt=.005,N=Math.floor(sec/dt);let vel=0,pos=0,integ=0,prev=target;const out=[];
-  // identified velocity plant: acceleration=(u - FF-ish - kv*v)/ka
-  const mass=Math.max(Math.abs(ff.ka),.001), kv=ff.kv;
-  let rms=0;
-  for(let i=0;i<N;i++){
-    const t=i*dt,e=target-vel;integ+=e*dt;const de=(e-prev)/dt;
-    let u=pid.kp*e+pid.ki*integ+pid.kd*de;
-    const sign=Math.sign(vel||u), ffv=ff.ks*sign+ff.kv*vel;
-    u=Math.max(-+$('maxOut').value,Math.min(+$('maxOut').value,u+ffv));
-    const acc=(u-ffv)/mass;vel+=acc*dt;pos+=vel*dt;prev=e;rms+=e*e;
-    out.push({t,vel,u});
+  for (let i = 0; i < m; i++) A[i][i] += lambda;
+  for (let k = 0; k < m; k++) {
+    let piv = k;
+    for (let i = k + 1; i < m; i++) if (Math.abs(A[i][k]) > Math.abs(A[piv][k])) piv = i;
+    if (Math.abs(A[piv][k]) < 1e-12) continue;
+    [A[k], A[piv]] = [A[piv], A[k]];
+    [b[k], b[piv]] = [b[piv], b[k]];
+    for (let i = k + 1; i < m; i++) {
+      const q = A[i][k] / A[k][k];
+      for (let j = k; j < m; j++) A[i][j] -= q * A[k][j];
+      b[i] -= q * b[k];
+    }
   }
-  return {out,rms:Math.sqrt(rms/N)};
+  const z = Array(m).fill(0);
+  for (let i = m - 1; i >= 0; i--) {
+    let s = b[i];
+    for (let j = i + 1; j < m; j++) s -= A[i][j] * z[j];
+    z[i] = Math.abs(A[i][i]) < 1e-12 ? 0 : s / A[i][i];
+  }
+  return z.map(v => Number.isFinite(v) ? v : 0);
 }
-function autotune(ff){
-  const requested=+$('target').value;
-  const observedMax=Math.max(...S.data.map(r=>Math.abs(r.vel)));
-  const available=S.twin?twinMaximum(S.twin):observedMax;
-  const requestedTarget=Number.isFinite(requested)&&requested>0?requested:Math.max(observedMax,1);
-  const target=Math.min(requestedTarget,Math.max(available*.92,.01));
-  let best={rms:Infinity,kp:0,ki:0,kd:0,sim:null};
-  const kv=Math.max(Math.abs(ff.kv),1e-4), ka=Math.max(Math.abs(ff.ka),1e-4);
-  const scales=[.02,.05,.1,.2,.4,.8,1.6,3.2,6.4];
-  for(const kp of scales.map(x=>x*kv)){
-    for(const kd of scales.slice(0,7).map(x=>x*ka)){
-      for(const ki of [0,kp*.005,kp*.02,kp*.05]){
-        const pid={kp,ki,kd},sim=plantSim(pid,ff,target);
-        if(Number.isFinite(sim.rms)&&sim.out.every(r=>Number.isFinite(r.vel))&&sim.rms<best.rms)
-          best={...pid,rms:sim.rms,sim};
+
+function identify(data) {
+  const d = data || S.data;
+  const gravity = $('gravity').value;
+  const X = [], y = [];
+  d.forEach(r => {
+    if (Math.abs(r.vel) < 1e-6 && Math.abs(r.acc) < 1e-6) return;
+    const row = [Math.sign(r.vel || r.v), r.vel, r.acc];
+    if (gravity === 'cos') row.push(Math.cos(r.theta * Math.PI / 180));
+    X.push(row);
+    y.push(r.v);
+  });
+  if (X.length < 6) throw Error('Not enough dynamic samples for identification on this axis.');
+  const b = regress(X, y);
+  return { ks: b[0] || 0, kv: b[1] || 0, ka: b[2] || 0, kg: gravity === 'cos' ? (b[3] || 0) : 0 };
+}
+
+function twinValues() {
+  return {
+    ks: +$('twinKs').value,
+    kv: +$('twinKv').value,
+    ka: Math.max(+$('twinKa').value, 0.0001),
+    kg: +$('twinKg').value,
+    noise: Math.max(0, +$('twinNoise').value) / 100,
+    battery: Math.max(+$('twinBattery').value, 0.1)
+  };
+}
+
+function twinMaximum(t) {
+  return Math.max(0, (t.battery - Math.abs(t.ks) - Math.abs(t.kg)) / Math.max(Math.abs(t.kv), 0.0001));
+}
+
+function makeTwinData(t, seedNoise = t.noise) {
+  const a = [], dt = 0.01;
+  let vel = 0, pos = 0;
+  for (let i = 0; i < 1200; i++) {
+    const time = i * dt, phase = time % 6;
+    const cmd = phase < 1.5 ? 2 + 6 * phase / 1.5 : phase < 3 ? 8 : phase < 4.5 ? -2 - 6 * (phase - 3) / 1.5 : -8;
+    const sign = Math.sign(vel || cmd);
+    const friction = t.ks * sign + t.kv * vel + t.kg;
+    const acc = (cmd - friction) / t.ka;
+    vel += acc * dt;
+    pos += vel * dt;
+    const noise = 1 + (Math.random() - 0.5) * 2 * seedNoise;
+    a.push({ t: time, v: cmd, p: pos, vel: vel * noise, theta: 0, phase: 'twin', channel: 'single', axisHint: S.axis });
+  }
+  // acc
+  for (let i = 0; i < a.length; i++) {
+    const prev = a[Math.max(0, i - 1)], next = a[Math.min(a.length - 1, i + 1)];
+    const dtt = next.t - prev.t;
+    a[i].acc = dtt ? (next.vel - prev.vel) / dtt : 0;
+  }
+  return a;
+}
+
+function closedLoopSim(pid, ff, target, twin, sec = 4) {
+  const dt = 0.005, N = Math.floor(sec / dt);
+  let vel = 0, pos = 0, integ = 0, prev = target;
+  const out = [];
+  let sum = 0;
+  for (let i = 0; i < N; i++) {
+    const time = i * dt, error = target - vel;
+    integ += error * dt;
+    const derivative = (error - prev) / dt;
+    const sign = Math.sign(vel || error);
+    const identifiedFF = ff.ks * sign + ff.kv * vel + ff.kg;
+    let voltage = pid.kp * error + pid.ki * integ + pid.kd * derivative + identifiedFF;
+    voltage = Math.max(-twin.battery, Math.min(twin.battery, voltage));
+    const trueFF = twin.ks * sign + twin.kv * vel + twin.kg;
+    vel += ((voltage - trueFF) / twin.ka) * dt;
+    pos += vel * dt;
+    prev = error;
+    sum += error * error;
+    out.push({ t: time, vel, u: voltage, pos });
+  }
+  return { out, rms: Math.sqrt(sum / N) };
+}
+
+function plantSim(pid, ff, target, sec = 4) {
+  if (S.twin) return closedLoopSim(pid, ff, target, S.twin, sec);
+  const dt = 0.005, N = Math.floor(sec / dt);
+  let vel = 0, pos = 0, integ = 0, prev = target;
+  const out = [];
+  const mass = Math.max(Math.abs(ff.ka), 0.0001);
+  let rms = 0;
+  for (let i = 0; i < N; i++) {
+    const t = i * dt, e = target - vel;
+    integ += e * dt;
+    const de = (e - prev) / dt;
+    let u = pid.kp * e + pid.ki * integ + pid.kd * de;
+    const sign = Math.sign(vel || u);
+    const ffv = ff.ks * sign + ff.kv * vel;
+    u = Math.max(-+$('maxOut').value, Math.min(+$('maxOut').value, u + ffv));
+    const acc = (u - ffv) / mass;
+    vel += acc * dt;
+    pos += vel * dt;
+    prev = e;
+    rms += e * e;
+    out.push({ t, vel, u });
+  }
+  return { out, rms: Math.sqrt(rms / N) };
+}
+
+function autotune(ff, data) {
+  const requested = +$('target').value;
+  const observedMax = Math.max(...data.map(r => Math.abs(r.vel)), 1);
+  const available = S.twin ? twinMaximum(S.twin) : observedMax;
+  const requestedTarget = Number.isFinite(requested) && requested > 0 ? requested : Math.max(observedMax, 1);
+  const target = Math.min(requestedTarget, Math.max(available * 0.92, 0.01));
+  let best = { rms: Infinity, kp: 0, ki: 0, kd: 0, sim: null };
+  const kv = Math.max(Math.abs(ff.kv), 1e-6);
+  const ka = Math.max(Math.abs(ff.ka), 1e-6);
+  const scales = [0.02, 0.05, 0.1, 0.2, 0.4, 0.8, 1.6, 3.2, 6.4];
+  for (const kp of scales.map(x => x * kv)) {
+    for (const kd of scales.slice(0, 7).map(x => x * ka)) {
+      for (const ki of [0, kp * 0.005, kp * 0.02, kp * 0.05]) {
+        const pid = { kp, ki, kd };
+        const sim = plantSim(pid, ff, target);
+        if (Number.isFinite(sim.rms) && sim.out.every(r => Number.isFinite(r.vel)) && sim.rms < best.rms)
+          best = { ...pid, rms: sim.rms, sim };
       }
     }
   }
-  if(!best.sim) throw Error("No stable PID candidate was found. Check the data units and characterization quality.");
-  best.target=target;
-  best.requestedTarget=requestedTarget;
-  best.available=available;
+  if (!best.sim) throw Error('No stable PID candidate was found. Check data units and axis purity.');
+  best.target = target;
+  best.requestedTarget = requestedTarget;
+  best.available = available;
   return best;
 }
-function tune(){
-  if(S.data.length<4){setStatus("Load data first.");return}
-  try{
-    const ff=identify(),best=autotune(ff);S.ff=ff;S.pid=best;S.sim=best.sim;
-    $('ks').textContent=ff.ks.toFixed(5);$('kv').textContent=ff.kv.toFixed(5);$('ka').textContent=ff.ka.toFixed(5);$('kg').textContent=ff.kg.toFixed(5);
-    $('kp').textContent=best.kp.toPrecision(6);$('ki').textContent=best.ki.toPrecision(6);$('kd').textContent=best.kd.toPrecision(6);$('rms').textContent=best.rms.toFixed(3);
-    $('modelText').innerHTML=`Identified model: <b>V = ${ff.ks.toFixed(4)}·sgn(v) + ${ff.kv.toFixed(4)}·v + ${ff.ka.toFixed(4)}·a${ff.kg?' + '+ff.kg.toFixed(4)+'·cos(θ)':''}</b>`;
-    const usedTarget=best.target||+$('target').value||1; const last=best.sim.out.slice(-1)[0],max=Math.max(...best.sim.out.map(x=>x.vel));const over=Math.max(0,(max-usedTarget)/usedTarget*100);
-    const warning=best.requestedTarget>best.available?`<div class="callout">&#9888; <b>Unreachable target:</b> estimated maximum velocity at ${S.twin?.battery.toFixed(1)||$('maxOut').value} V is ${best.available.toFixed(2)}. Simulating a safe target of ${usedTarget.toFixed(2)}.</div>`:'';
-    $('metrics').innerHTML=`Target: <b>${usedTarget.toFixed(2)}</b> · Final velocity: <b>${last.vel.toFixed(2)}</b> · Peak overshoot: <b>${over.toFixed(1)}%</b> · Simulated duration: <b>4.0 s</b> · <span class="success">Model/tuning complete</span>${warning}`;
-    $('reachability').className=warning?'callout':'callout good';$('reachability').innerHTML=warning||`Target <b>${usedTarget.toFixed(2)}</b> is inside the estimated operating range of <b>${best.available.toFixed(2)}</b>.`;
-    if(S.twin){$('maxVelocity').textContent=best.available.toFixed(2);$('twinRms').textContent=best.rms.toFixed(3);$('twinState').textContent='Running';}
-    drawSim();drawTwin();setStatus("Characterization and autotuning complete.");
-    $('output').textContent=makeCode();
-  }catch(e){setStatus("Tuning error: "+e.message)}
-}
-function runTwin(){
-  try{
-    S.twin=twinValues();
-    if(![S.twin.ks,S.twin.kv,S.twin.ka,S.twin.kg,S.twin.battery].every(Number.isFinite))throw Error('Twin parameters must be numeric.');
-    S.data=makeTwinData(S.twin);S.meta={platform:'Generic',mechanism:'velocity',source:'digital-twin'};render();
-    tune();$('twinStatus').textContent='Hidden plant ran 12 seconds with synthetic sensor noise. Identification used only its telemetry.';
-  }catch(e){$('twinStatus').textContent='Twin error: '+e.message}
-}
-function monteCarlo(){
-  try{
-    const twin=twinValues(),runs=100,errors={ks:[],kv:[],ka:[]};
-    for(let i=0;i<runs;i++){
-      const identified=(()=>{const saved=S.data;S.data=makeTwinData(twin);const result=identify();S.data=saved;return result})();
-      for(const key of ['ks','kv','ka'])errors[key].push(Math.abs((identified[key]-twin[key])/Math.max(Math.abs(twin[key]),.001))*100);
+
+function tune() {
+  if (S.data.length < 4) { setStatus('Load data first.'); return; }
+  try {
+    const axisData = filterByAxis(S.data, S.axis);
+    if (axisData.length < 6) throw Error(`Too few samples for axis "${S.axis}". Load pure-axis runs or switch axis.`);
+    const ff = identify(axisData);
+    const best = autotune(ff, axisData);
+    S.ff = ff;
+    S.pid = best;
+    S.sim = best.sim;
+    S.axisModels[S.axis] = { ff, pid: { kP: best.kp, kI: best.ki, kD: best.kd }, target: best.target, rms: best.rms };
+
+    $('ks').textContent = ff.ks.toFixed(5);
+    $('kv').textContent = ff.kv.toFixed(5);
+    $('ka').textContent = ff.ka.toFixed(5);
+    $('kg').textContent = ff.kg.toFixed(5);
+    $('kp').textContent = best.kp.toPrecision(6);
+    $('ki').textContent = best.ki.toPrecision(6);
+    $('kd').textContent = best.kd.toPrecision(6);
+    $('rms').textContent = best.rms.toFixed(3);
+    $('axisBadge').textContent = S.axis;
+    $('modelText').innerHTML =
+      `Identified <b>${S.axis}</b> model (${axisData.length} samples): ` +
+      `<b>V = ${ff.ks.toFixed(4)}·sgn(v) + ${ff.kv.toFixed(4)}·v + ${ff.ka.toFixed(4)}·a` +
+      `${ff.kg ? ' + ' + ff.kg.toFixed(4) + '·cos(θ)' : ''}</b>`;
+
+    const usedTarget = best.target || +$('target').value || 1;
+    const last = best.sim.out.slice(-1)[0];
+    const max = Math.max(...best.sim.out.map(x => x.vel));
+    const over = Math.max(0, (max - usedTarget) / usedTarget * 100);
+    const warning = best.requestedTarget > best.available
+      ? `<div class="callout">⚠ <b>Unreachable target:</b> estimated max velocity ≈ ${best.available.toFixed(2)}. Using safe target ${usedTarget.toFixed(2)}.</div>`
+      : '';
+    $('metrics').innerHTML =
+      `Axis: <b>${S.axis}</b> · Target: <b>${usedTarget.toFixed(2)}</b> · Final: <b>${last.vel.toFixed(2)}</b> · ` +
+      `Peak overshoot: <b>${over.toFixed(1)}%</b> · <span class="success">Done</span>${warning}`;
+    $('reachability').className = warning ? 'callout' : 'callout good';
+    $('reachability').innerHTML = warning ||
+      `Target <b>${usedTarget.toFixed(2)}</b> is inside estimated range <b>${best.available.toFixed(2)}</b>.`;
+    if (S.twin) {
+      $('maxVelocity').textContent = best.available.toFixed(2);
+      $('twinRms').textContent = best.rms.toFixed(3);
+      $('twinState').textContent = 'Running';
     }
-    const mean=key=>errors[key].reduce((a,b)=>a+b,0)/runs;
-    const confidence=Math.max(0,Math.min(99.9,100-(mean('ks')+mean('kv')+mean('ka'))/3));
-    $('confidence').textContent=confidence.toFixed(1)+'%';$('twinStatus').innerHTML=`<b>${runs} runs complete.</b> Mean absolute error: kS ${mean('ks').toFixed(1)}%, kV ${mean('kv').toFixed(1)}%, kA ${mean('ka').toFixed(1)}%.`;
-  }catch(e){$('twinStatus').textContent='Validation error: '+e.message}
+    updateAxisSummary();
+    drawSim();
+    drawTwin();
+    setStatus(`Characterization complete for axis "${S.axis}".`);
+    $('output').textContent = makeCode();
+  } catch (e) {
+    setStatus('Tuning error: ' + e.message);
+  }
 }
-function render(){
-  const d=S.data;$('tbody').innerHTML=d.slice(0,100).map(r=>`<tr><td>${r.t.toFixed(3)}</td><td>${r.v.toFixed(3)}</td><td>${r.p.toFixed(3)}</td><td>${r.vel.toFixed(3)}</td><td>${r.acc.toFixed(3)}</td></tr>`).join('');
+
+function updateAxisSummary() {
+  const keys = Object.keys(S.axisModels);
+  if (!keys.length) {
+    $('axisSummary').style.display = 'none';
+    return;
+  }
+  $('axisSummary').style.display = 'block';
+  $('axisSummary').innerHTML = keys.map(k => {
+    const m = S.axisModels[k];
+    return `<div><b>${k}</b>: kS=${m.ff.ks.toFixed(4)}, kV=${m.ff.kv.toFixed(4)}, kA=${m.ff.ka.toFixed(4)} · ` +
+      `PID ${m.pid.kP.toPrecision(4)} / ${m.pid.kI.toPrecision(3)} / ${m.pid.kD.toPrecision(3)}</div>`;
+  }).join('');
+}
+
+function runTwin() {
+  try {
+    S.twin = twinValues();
+    if (![S.twin.ks, S.twin.kv, S.twin.ka, S.twin.kg, S.twin.battery].every(Number.isFinite))
+      throw Error('Twin parameters must be numeric.');
+    S.data = makeTwinData(S.twin);
+    S.meta = { platform: 'Generic', mechanism: $('mechanism').value, source: 'digital-twin' };
+    S.axisModels = {};
+    render();
+    tune();
+    $('twinStatus').textContent = 'Hidden plant ran with synthetic noise. Identification used only its telemetry.';
+  } catch (e) {
+    $('twinStatus').textContent = 'Twin error: ' + e.message;
+  }
+}
+
+function monteCarlo() {
+  try {
+    const twin = twinValues(), runs = 100, errors = { ks: [], kv: [], ka: [] };
+    for (let i = 0; i < runs; i++) {
+      const identified = (() => {
+        const saved = S.data;
+        S.data = makeTwinData(twin);
+        const result = identify(S.data);
+        S.data = saved;
+        return result;
+      })();
+      for (const key of ['ks', 'kv', 'ka'])
+        errors[key].push(Math.abs((identified[key] - twin[key]) / Math.max(Math.abs(twin[key]), 0.001)) * 100);
+    }
+    const mean = key => errors[key].reduce((a, b) => a + b, 0) / runs;
+    const confidence = Math.max(0, Math.min(99.9, 100 - (mean('ks') + mean('kv') + mean('ka')) / 3));
+    $('confidence').textContent = confidence.toFixed(1) + '%';
+    $('twinStatus').innerHTML =
+      `<b>${runs} runs complete.</b> Mean abs error: kS ${mean('ks').toFixed(1)}%, kV ${mean('kv').toFixed(1)}%, kA ${mean('ka').toFixed(1)}%.`;
+  } catch (e) {
+    $('twinStatus').textContent = 'Validation error: ' + e.message;
+  }
+}
+
+function render() {
+  const d = filterByAxis(S.data, S.axis);
+  $('tbody').innerHTML = d.slice(0, 80).map(r =>
+    `<tr><td>${r.t.toFixed(3)}</td><td>${r.v.toFixed(3)}</td><td>${r.p.toFixed(2)}</td>` +
+    `<td>${r.vel.toFixed(2)}</td><td>${(r.acc || 0).toFixed(2)}</td><td>${esc(r.phase || '')}</td></tr>`
+  ).join('');
   drawData();
 }
-function chartBase(canvas){
-  const c=canvas.getContext('2d'),w=canvas.width=canvas.clientWidth*devicePixelRatio,h=canvas.height=canvas.clientHeight*devicePixelRatio;c.scale(devicePixelRatio,devicePixelRatio);return [c,canvas.clientWidth,canvas.clientHeight];
+
+function esc(s) {
+  return String(s).replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]));
 }
-function lineChart(canvas,sets){
-  const [c,w,h]=chartBase(canvas),pad=35; c.clearRect(0,0,w,h);c.strokeStyle="#26344f";c.fillStyle="#9aa7bd";c.font="11px system-ui";
-  const xs=sets.flatMap(s=>s.data.map(p=>p.x)),ys=sets.flatMap(s=>s.data.map(p=>p.y)),xmin=Math.min(...xs),xmax=Math.max(...xs),ymin=Math.min(...ys),ymax=Math.max(...ys);
-  const sy=Math.max(1e-9,ymax-ymin),sx=Math.max(1e-9,xmax-xmin);
-  for(let i=0;i<5;i++){let y=pad+(h-pad*1.5)*i/4;c.beginPath();c.moveTo(pad,y);c.lineTo(w-10,y);c.stroke();c.fillText((ymax-sy*i/4).toPrecision(4),3,y+3)}
-  sets.forEach((s,j)=>{c.beginPath();s.data.forEach((p,i)=>{const x=pad+(w-pad-10)*(p.x-xmin)/sx,y=pad+(h-pad*1.5)*(ymax-p.y)/sy;i?c.lineTo(x,y):c.moveTo(x,y)});c.strokeStyle=j===0?"#49c878":"#63e6a0";c.lineWidth=1.5;c.stroke()});
-  c.fillStyle="#9aa7bd";c.fillText("time",w-40,h-8);
+
+function chartBase(canvas) {
+  const c = canvas.getContext('2d');
+  const w = canvas.width = canvas.clientWidth * devicePixelRatio;
+  const h = canvas.height = canvas.clientHeight * devicePixelRatio;
+  c.scale(devicePixelRatio, devicePixelRatio);
+  return [c, canvas.clientWidth, canvas.clientHeight];
 }
-function drawData(){if(!S.data.length)return;lineChart($('chart'),[{data:S.data.map(r=>({x:r.t,y:r.vel}))},{data:S.data.map(r=>({x:r.t,y:r.v}))}])}
-function drawSim(){if(!S.sim)return;const target=S.pid?.target??+$('target').value;lineChart($('simChart'),[{data:S.sim.out.map(r=>({x:r.t,y:r.vel}))},{data:S.sim.out.map(r=>({x:r.t,y:target}))}])}
-function drawTwin(){if(!S.sim)return;const target=S.pid?.target??+$('target').value;lineChart($('twinChart'),[{data:S.sim.out.map(r=>({x:r.t,y:r.vel}))},{data:S.sim.out.map(r=>({x:r.t,y:target}))}])}
-function makeConstants(){return {roboTuneVersion:"0.1",platform:$('platform').value,mechanism:$('mechanism').value,feedforward:S.ff,pid:S.pid?{kP:S.pid.kp,kI:S.pid.ki,kD:S.pid.kd}:null,units:{position:$('posUnit').value,velocity:$('velUnit').value,voltage:$('voltUnit').value}}}
-function makeCode(){
- if(!S.ff||!S.pid)return "Tune the system first.";
- const f=S.ff,p=S.pid,plat=$('platform').value;
- if(plat.startsWith("VEX"))return `// RoboTune generated — PROS\nconst double kS = ${f.ks};\nconst double kV = ${f.kv};\nconst double kA = ${f.ka};\nconst double kG = ${f.kg};\nconst double kP = ${p.kp};\nconst double kI = ${p.ki};\nconst double kD = ${p.kd};`;
- if(plat==="FTC")return `// RoboTune generated — FTC\nfinal double kS = ${f.ks};\nfinal double kV = ${f.kv};\nfinal double kA = ${f.ka};\nfinal double kG = ${f.kg};\nfinal double kP = ${p.kp};\nfinal double kI = ${p.ki};\nfinal double kD = ${p.kd};`;
- if(plat==="FRC")return `// RoboTune generated — WPILib\npublic static final double kS = ${f.ks};\npublic static final double kV = ${f.kv};\npublic static final double kA = ${f.ka};\npublic static final double kG = ${f.kg};\npublic static final double kP = ${p.kp};\npublic static final double kI = ${p.ki};\npublic static final double kD = ${p.kd};`;
- return JSON.stringify(makeConstants(),null,2);
+
+function lineChart(canvas, sets) {
+  const [c, w, h] = chartBase(canvas), pad = 35;
+  c.clearRect(0, 0, w, h);
+  c.strokeStyle = '#26344f';
+  c.fillStyle = '#9aa7bd';
+  c.font = '11px system-ui';
+  const xs = sets.flatMap(s => s.data.map(p => p.x));
+  const ys = sets.flatMap(s => s.data.map(p => p.y));
+  if (!xs.length) return;
+  const xmin = Math.min(...xs), xmax = Math.max(...xs);
+  const ymin = Math.min(...ys), ymax = Math.max(...ys);
+  const sy = Math.max(1e-9, ymax - ymin), sx = Math.max(1e-9, xmax - xmin);
+  for (let i = 0; i < 5; i++) {
+    const y = pad + (h - pad * 1.5) * i / 4;
+    c.beginPath(); c.moveTo(pad, y); c.lineTo(w - 10, y); c.stroke();
+    c.fillText((ymax - sy * i / 4).toPrecision(4), 3, y + 3);
+  }
+  const colors = ['#49c878', '#6bd8e8', '#f1c75b', '#ff7070'];
+  sets.forEach((s, j) => {
+    c.beginPath();
+    s.data.forEach((p, i) => {
+      const x = pad + (w - pad - 10) * (p.x - xmin) / sx;
+      const y = pad + (h - pad * 1.5) * (ymax - p.y) / sy;
+      i ? c.lineTo(x, y) : c.moveTo(x, y);
+    });
+    c.strokeStyle = colors[j % colors.length];
+    c.lineWidth = 1.5;
+    c.stroke();
+  });
+  c.fillStyle = '#9aa7bd';
+  c.fillText('time', w - 40, h - 8);
 }
-function download(name,text,type){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([text],{type}));a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),500)}
-$('file').onchange=e=>loadFiles([...e.target.files]);$('demo').onclick=demoData;$('clear').onclick=()=>{S.data=[];S.ff=S.pid=S.sim=S.twin=null;$('tbody').innerHTML="";$('output').textContent="";$('twinState').textContent="Idle";$('maxVelocity').textContent="—";$('twinRms').textContent="—";setStatus("Cleared.");}
-$('tune').onclick=tune;$('runTwin').onclick=runTwin;$('monteCarlo').onclick=monteCarlo;$('jsonOut').onclick=()=>S.ff?download("robotune_constants.json",JSON.stringify(makeConstants(),null,2),"application/json"):setStatus("Tune first.");
-$('codeOut').onclick=()=>S.ff?download("robotune_constants.txt",makeCode(),"text/plain"):setStatus("Tune first.");
-$('drop').ondragover=e=>{e.preventDefault();$('drop').classList.add("drag")};$('drop').ondragleave=()=>$('drop').classList.remove("drag");$('drop').ondrop=e=>{e.preventDefault();$('drop').classList.remove("drag");loadFiles([...e.dataTransfer.files].filter(f=>f.name.endsWith(".json")))}
-window.addEventListener("resize",()=>{drawData();drawSim()});
+
+function drawData() {
+  if (!S.data.length) return;
+  const d = filterByAxis(S.data, S.axis);
+  lineChart($('chart'), [
+    { data: d.map(r => ({ x: r.t, y: r.vel })) },
+    { data: d.map(r => ({ x: r.t, y: r.v })) }
+  ]);
+}
+
+function drawSim() {
+  if (!S.sim) return;
+  const target = S.pid?.target ?? +$('target').value;
+  lineChart($('simChart'), [
+    { data: S.sim.out.map(r => ({ x: r.t, y: r.vel })) },
+    { data: S.sim.out.map(r => ({ x: r.t, y: target })) }
+  ]);
+}
+
+function drawTwin() {
+  if (!S.sim) return;
+  const target = S.pid?.target ?? +$('target').value;
+  lineChart($('twinChart'), [
+    { data: S.sim.out.map(r => ({ x: r.t, y: r.vel })) },
+    { data: S.sim.out.map(r => ({ x: r.t, y: target })) }
+  ]);
+}
+
+function makeConstants() {
+  return {
+    roboTuneVersion: '0.3',
+    platform: $('platform').value,
+    mechanism: $('mechanism').value,
+    activeAxis: S.axis,
+    feedforward: S.ff,
+    pid: S.pid ? { kP: S.pid.kp, kI: S.pid.ki, kD: S.pid.kd } : null,
+    axes: S.axisModels,
+    units: {
+      position: $('posUnit').value,
+      velocity: $('velUnit').value,
+      voltage: $('voltUnit').value
+    }
+  };
+}
+
+function makeCode() {
+  if (!S.ff || !S.pid) return 'Tune the system first.';
+  const plat = $('platform').value;
+  const axes = S.axisModels;
+  const hasMulti = Object.keys(axes).length > 1;
+
+  if (plat === 'FTC') {
+    let code = `// RoboTune generated — FTC mecanum / velocity\n`;
+    if (hasMulti) {
+      for (const [name, m] of Object.entries(axes)) {
+        const tag = name.toUpperCase();
+        code += `// --- ${name} ---\n`;
+        code += `public static final double kS_${tag} = ${m.ff.ks};\n`;
+        code += `public static final double kV_${tag} = ${m.ff.kv};\n`;
+        code += `public static final double kA_${tag} = ${m.ff.ka};\n`;
+        code += `public static final double kP_${tag} = ${m.pid.kP};\n`;
+        code += `public static final double kI_${tag} = ${m.pid.kI};\n`;
+        code += `public static final double kD_${tag} = ${m.pid.kD};\n\n`;
+      }
+      code += `// Example chassis voltage: feedforward per axis + PID on measured vx/vy/omega\n`;
+    } else {
+      const f = S.ff, p = S.pid;
+      code += `public static final double kS = ${f.ks};\n`;
+      code += `public static final double kV = ${f.kv};\n`;
+      code += `public static final double kA = ${f.ka};\n`;
+      code += `public static final double kP = ${p.kp};\n`;
+      code += `public static final double kI = ${p.ki};\n`;
+      code += `public static final double kD = ${p.kd};\n`;
+    }
+    return code;
+  }
+
+  if (plat === 'FRC') {
+    let code = `// RoboTune generated — WPILib\n`;
+    if (hasMulti) {
+      for (const [name, m] of Object.entries(axes)) {
+        const tag = name.charAt(0).toUpperCase() + name.slice(1);
+        code += `public static final double kS${tag} = ${m.ff.ks};\n`;
+        code += `public static final double kV${tag} = ${m.ff.kv};\n`;
+        code += `public static final double kA${tag} = ${m.ff.ka};\n`;
+        code += `public static final double kP${tag} = ${m.pid.kP};\n`;
+        code += `public static final double kI${tag} = ${m.pid.kI};\n`;
+        code += `public static final double kD${tag} = ${m.pid.kD};\n\n`;
+      }
+    } else {
+      const f = S.ff, p = S.pid;
+      code += `public static final double kS = ${f.ks};\npublic static final double kV = ${f.kv};\n`;
+      code += `public static final double kA = ${f.ka};\npublic static final double kP = ${p.kp};\n`;
+      code += `public static final double kI = ${p.ki};\npublic static final double kD = ${p.kd};\n`;
+    }
+    return code;
+  }
+
+  if (plat.startsWith('VEX')) {
+    const f = S.ff, p = S.pid;
+    return `// RoboTune generated — PROS\nconst double kS = ${f.ks};\nconst double kV = ${f.kv};\n` +
+      `const double kA = ${f.ka};\nconst double kP = ${p.kp};\nconst double kI = ${p.ki};\nconst double kD = ${p.kd};`;
+  }
+
+  return JSON.stringify(makeConstants(), null, 2);
+}
+
+function download(name, text, type) {
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([text], { type }));
+  a.download = name;
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 500);
+}
+
+// Axis tabs
+document.querySelectorAll('#axisTabs button').forEach(btn => {
+  btn.onclick = () => {
+    document.querySelectorAll('#axisTabs button').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    S.axis = btn.dataset.axis;
+    $('axisBadge').textContent = S.axis;
+    render();
+    if (S.axisModels[S.axis]) {
+      const m = S.axisModels[S.axis];
+      S.ff = m.ff;
+      S.pid = { kp: m.pid.kP, ki: m.pid.kI, kd: m.pid.kD, ...m };
+      $('ks').textContent = m.ff.ks.toFixed(5);
+      $('kv').textContent = m.ff.kv.toFixed(5);
+      $('ka').textContent = m.ff.ka.toFixed(5);
+      $('kp').textContent = m.pid.kP.toPrecision(6);
+      $('ki').textContent = m.pid.kI.toPrecision(6);
+      $('kd').textContent = m.pid.kD.toPrecision(6);
+    }
+  };
+});
+
+$('mechanism').onchange = () => {
+  const m = $('mechanism').value;
+  const hints = {
+    mecanum: 'Characterize <b>forward</b>, <b>strafe</b>, and <b>rotate</b> as separate pure-axis runs. Prefer lifted-wheel static tests first, then on-floor axis isolation.',
+    drive: 'Tank/differential: characterize left/right or shared wheel velocity. Start with wheels lifted.',
+    velocity: 'Single DOF velocity plant (flywheel, shooter).',
+    slide: 'Linear mechanism — use position limits and soft stops.',
+    pivot: 'Arm/pivot — use kG cos(θ) gravity model when appropriate.'
+  };
+  $('mechHint').innerHTML = hints[m] || '';
+  if (m === 'mecanum') {
+    $('target').value = 800;
+    $('posUnit').value = 'ticks';
+    $('velUnit').value = 'ticks/s';
+  }
+};
+
+$('file').onchange = e => loadFiles([...e.target.files]);
+$('demo').onclick = demoData;
+$('clear').onclick = () => {
+  S.data = []; S.ff = S.pid = S.sim = S.twin = null; S.axisModels = {};
+  $('tbody').innerHTML = ''; $('output').textContent = '';
+  $('twinState').textContent = 'Idle'; $('maxVelocity').textContent = '—';
+  $('twinRms').textContent = '—'; $('axisSummary').style.display = 'none';
+  setStatus('Cleared.');
+};
+$('tune').onclick = tune;
+$('runTwin').onclick = runTwin;
+$('monteCarlo').onclick = monteCarlo;
+$('jsonOut').onclick = () => S.ff
+  ? download('robotune_constants.json', JSON.stringify(makeConstants(), null, 2), 'application/json')
+  : setStatus('Tune first.');
+$('codeOut').onclick = () => S.ff
+  ? download('robotune_constants.txt', makeCode(), 'text/plain')
+  : setStatus('Tune first.');
+$('drop').ondragover = e => { e.preventDefault(); $('drop').classList.add('drag'); };
+$('drop').ondragleave = () => $('drop').classList.remove('drag');
+$('drop').ondrop = e => {
+  e.preventDefault();
+  $('drop').classList.remove('drag');
+  loadFiles([...e.dataTransfer.files].filter(f => f.name.endsWith('.json')));
+};
+window.addEventListener('resize', () => { drawData(); drawSim(); drawTwin(); });
 </script>
 </body>
 </html>
